@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ai_talking_points.urls'
+ROOT_URLCONF = 'setup.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ai_talking_points.wsgi.application'
+WSGI_APPLICATION = 'setup.wsgi.application'
 
 
 # Database

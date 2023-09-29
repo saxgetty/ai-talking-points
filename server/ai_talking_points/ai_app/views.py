@@ -1,17 +1,25 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+
+model_name = "gpt2"  # Choose the model name
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model = GPT2LMHeadModel.from_pretrained(model_name)
 
 @csrf_exempt
 def generate_talking_points(request):
     if request.method == 'POST':
-        data = json.loads(request.body.decode('utf-8'))
-        user_text = data.get('text', '')
+        user_input = "Can you tell me the temperature in Chicago, Illinois."
+        input_ids = tokenizer.encode(user_input, return_tensors="pt")
 
-        # Implement your AI logic here to generate talking points based on 'user_text'
-        # For simplicity, we'll return a dummy response for now
-        talking_points = ['Point 1', 'Point 2', 'Point 3']
+        # Generate a response
+        response_ids = model.generate(input_ids, max_length=50, num_return_sequences=1, pad_token_id=tokenizer.eos_token_id)
 
-        return JsonResponse({'talkingPoints': talking_points})
+        # Decode the response
+        response_text = tokenizer.decode(response_ids[0], skip_special_tokens=True)
+        print(response_text)
+
+        return JsonResponse({'aiResponse': response_text})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
