@@ -1,25 +1,22 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+import bardapi
+import os
+import dotenv
 
-model_name = "gpt2"  # Choose the model name
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-model = GPT2LMHeadModel.from_pretrained(model_name)
+dotenv.load_dotenv()
 
 @csrf_exempt
 def generate_talking_points(request):
     if request.method == 'POST':
-        user_input = "Can you tell me the temperature in Chicago, Illinois."
-        input_ids = tokenizer.encode(user_input, return_tensors="pt")
-
-        # Generate a response
-        response_ids = model.generate(input_ids, max_length=50, num_return_sequences=1, pad_token_id=tokenizer.eos_token_id)
-
-        # Decode the response
-        response_text = tokenizer.decode(response_ids[0], skip_special_tokens=True)
-        print(response_text)
-
-        return JsonResponse({'aiResponse': response_text})
+    # set your input text
+        input_text = input("How can I help? ")
+    # Send an API request and get a response.
+        token = os.environ['API_TOKEN']
+        response = bardapi.core.Bard(token).get_answer(input_text)
+        
+        return JsonResponse({'aiResponse': response})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
