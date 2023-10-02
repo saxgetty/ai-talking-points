@@ -52,8 +52,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False # For development; configure this for production
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173'] 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+]
 
 ROOT_URLCONF = 'setup.urls'
 
