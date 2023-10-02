@@ -39,3 +39,4 @@ def generateTalkingPoints(request):
             return JsonResponse({'error': str(e)}, status=500)
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
