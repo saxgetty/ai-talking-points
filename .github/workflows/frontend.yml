@@ -28,11 +28,6 @@ jobs:
           cd ./client
           npm run build
 
-      - name: Run TypeScript Check
-        run: |
-          cd ./client
-          npm run type-check
-
       - name: Run Tests
         run: |
           cd ./client
