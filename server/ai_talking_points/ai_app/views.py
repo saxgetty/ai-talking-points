@@ -2,11 +2,13 @@ from django.http import JsonResponse
 from ctransformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import pipeline, Conversation
 from django.views.decorators.csrf import csrf_exempt
-import json
-import torch
+from dotenv import load_dotenv
+import json, os, torch
+
+load_dotenv()
 
 # Load the model and tokenizer
-model_repo = "TheBloke/Kuchiki-L2-7B-GGUF"
+model_repo = os.environ.get('MODEL_REPO')
 model = AutoModelForCausalLM.from_pretrained(model_repo, hf=True)
 tokenizer = AutoTokenizer.from_pretrained(model)
 
@@ -25,7 +27,7 @@ def generateTalkingPoints(request):
 
             # Tokenize the user input with padding on the left side
             input_ids = tokenizer.encode(user_input, return_tensors="pt", padding="max_length", max_length=100, truncation=True)
-
+            
             # Generate text using the model
             with torch.no_grad():
                 output = model.generate(input_ids, max_length=100, num_return_sequences=1)
@@ -39,4 +41,3 @@ def generateTalkingPoints(request):
             return JsonResponse({'error': str(e)}, status=500)
         
     return JsonResponse({'error': 'Invalid request method'}, status=400)
-    
